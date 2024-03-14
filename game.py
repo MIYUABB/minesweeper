@@ -6,7 +6,7 @@ BLOCK_COLOR = (107, 107, 107)
 GRID_COLOR = (150, 150, 150)
 WINDOW_HEIGHT = 400
 WINDOW_WIDTH = 400
-BLOCKSIZE = 20
+BLOCK_SIZE = 20
 
 
 def main():
@@ -23,22 +23,22 @@ def main():
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_pos_x = round(pygame.mouse.get_pos()[0] / BLOCKSIZE) * BLOCKSIZE
+                mouse_pos_x = round(pygame.mouse.get_pos()[0] / BLOCK_SIZE) * BLOCK_SIZE
                 if pygame.mouse.get_pos()[0] < mouse_pos_x:
-                    mouse_pos_x = mouse_pos_x - BLOCKSIZE
-                mouse_pos_y = round(pygame.mouse.get_pos()[1] / BLOCKSIZE) * BLOCKSIZE
+                    mouse_pos_x = mouse_pos_x - BLOCK_SIZE
+                mouse_pos_y = round(pygame.mouse.get_pos()[1] / BLOCK_SIZE) * BLOCK_SIZE
                 if pygame.mouse.get_pos()[1] < mouse_pos_y:
-                    mouse_pos_y = mouse_pos_y - BLOCKSIZE
-                rect = pygame.Rect(mouse_pos_x, mouse_pos_y, BLOCKSIZE, BLOCKSIZE)
+                    mouse_pos_y = mouse_pos_y - BLOCK_SIZE
+                rect = pygame.Rect(mouse_pos_x, mouse_pos_y, BLOCK_SIZE, BLOCK_SIZE)
                 pygame.draw.rect(SCREEN, GRID_COLOR, rect)
 
         pygame.display.update()
 
 
 def draw_grid():
-    for x in range(0, WINDOW_WIDTH, BLOCKSIZE):
-        for y in range(0, WINDOW_HEIGHT, BLOCKSIZE):
-            rect = pygame.Rect(x, y, BLOCKSIZE, BLOCKSIZE)
+    for x in range(0, WINDOW_WIDTH, BLOCK_SIZE):
+        for y in range(0, WINDOW_HEIGHT, BLOCK_SIZE):
+            rect = pygame.Rect(x, y, BLOCK_SIZE, BLOCK_SIZE)
             pygame.draw.rect(SCREEN, GRID_COLOR, rect, 1)
 
 
