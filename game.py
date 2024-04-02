@@ -1,15 +1,17 @@
 import sys
 import time
 import pygame
+import minesweeper_matrix
 
 BLOCK_COLOR = (107, 107, 107)
-GRID_COLOR = (150, 150, 150)
+GRID_COLOR = (200, 200, 200)
 WINDOW_HEIGHT = 400
 WINDOW_WIDTH = 400
 BLOCK_SIZE = 20
 
 
 def main():
+    board = create_board()
     global SCREEN
     pygame.init()
     SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -40,6 +42,13 @@ def draw_grid():
         for y in range(0, WINDOW_HEIGHT, BLOCK_SIZE):
             rect = pygame.Rect(x, y, BLOCK_SIZE, BLOCK_SIZE)
             pygame.draw.rect(SCREEN, GRID_COLOR, rect, 1)
+
+def create_board():
+    heigth = int(input("Give a heigth"))
+    width = int(input("Give a width"))
+    mines = int(input("Give num of mines"))
+    board = minesweeper_matrix.create_minesweeper_board(heigth, width, mines)
+    return board
 
 
 if __name__ == "__main__":
