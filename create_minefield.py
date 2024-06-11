@@ -3,77 +3,57 @@ from random import randint
 
 def create_minesweeper_matrix(width, height, mine_count, x, y):
     mine_field = []
-    for x in range(width):
+    for horizontal in range(width):
         mine_field.append([])
-        for y in range(height):
-            mine_field[x].append(0)
-    if mine_count <= width * height:
-        for mine in range(mine_count):
-            while True:
-                x_axis = randint(0, width - 1)
-                y_axis = randint(0, height - 1)
-                if mine_field[x_axis][y_axis] == 9:
-                    continue
-                else:
-                    mine_field[x_axis][y_axis] = 9
-                    break
-        correct_fields(mine_field)
-        return mine_field
-    else:
-        return "Invalid mines count"
+        for vertical in range(height):
+            mine_field[horizontal].append(0)
+    mine_field[x][y] = 10
+    if x != width - 1:
+        mine_field[x + 1][y] += 10
+    if y != height - 1:
+        mine_field[x][y + 1] += 10
+    if x != width - 1 and y != height - 1:
+        mine_field[x + 1][y + 1] += 10
+    if x != 0:
+        mine_field[x-1][y] = 10
+        if y != height-1:
+            mine_field[x-1][y+1] = 10
+    if y != 0:
+        mine_field[x][y-1] = 10
+        if x != width-1:
+            mine_field[x+1][y-1] = 10
+    if x != 0 and y != 0:
+        mine_field[x-1][y-1] = 10
 
+    while mine_count > 0:
+        random_x = randint(0, width-1)
+        random_y = randint(0, height-1)
+        if mine_field[random_x][random_y] != 10:
+            mine_field[random_x][random_y] = 9
+            mine_count -= 1
+    for row in mine_field:
+        print(row)
 
-def correct_fields(field):
-    for i in range(len(field)):
-        for j in range(len(field[i])):
-            if field[i][j] == 9:
-                continue
+    for x in range(len(mine_field)):
+        for y in range(x):
+            if mine_field[x][y] == 10:
+                mine_field[x][y] -= 10
+            elif mine_field[x][y] == 9:
+                if x != width-1:
+                    mine_field[x + 1][y] += 1
+                if y != height-1:
+                    mine_field[x][y + 1] += 1
+                if x != width-1 and y != height-1:
+                    mine_field[x + 1][y + 1] += 1
+                if x != 0:
+                    mine_field[x - 1][y] += 1
+                    if y != height-1:
+                        mine_field[x - 1][y + 1] += 1
+                if y != 0:
+                    mine_field[x][y - 1] += 1
+                    if x != width-1:
+                        mine_field[x + 1][y - 1] += 1
+                if x != 0 and y != 0:
+                    mine_field[x - 1][y - 1] += 1
             else:
-                counter = 0
-                try:
-                    if field[i - 1][j - 1] == 9:
-                        counter += 1
-                except IndexError:
-                    pass
-                try:
-                    if field[i - 1][j] == 9:
-                        counter += 1
-                except IndexError:
-                    pass
-                try:
-                    if field[i - 1][j + 1] == 9:
-                        counter += 1
-                except IndexError:
-                    pass
-                try:
-                    if field[i][j - 1] == 9:
-                        counter += 1
-                except IndexError:
-                    pass
-                try:
-                    if field[i][j + 1] == 9:
-                        counter += 1
-                except IndexError:
-                    pass
-                try:
-                    if field[i + 1][j - 1] == 9:
-                        counter += 1
-                except IndexError:
-                    pass
-                try:
-                    if field[i + 1][j] == 9:
-                        counter += 1
-                except IndexError:
-                    pass
-                try:
-                    if field[i + 1][j + 1] == 9:
-                        counter += 1
-                except IndexError:
-                    pass
-                if counter >= 8:
-                    field[i][j] = 9
-                else:
-                    field[i][j] = counter
-    return field
-
-
+                continue
