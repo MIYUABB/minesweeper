@@ -12,16 +12,22 @@ BLOCK_SIZE = 20
 def play_minesweeper(height, width, mine_count):
     global SCREEN, CLOCK
     first_click = True
+    game_over = False
+    running = True
     pygame.init()
     opened = create_opened(height, width)
     mine_field = []
     SCREEN = pygame.display.set_mode((width * BLOCK_SIZE, height * BLOCK_SIZE))
     CLOCK = pygame.time.Clock()
-    running = True
 
     while running:
         SCREEN.fill(CELL_COLOR)
-        draw_minesweeper(height, width, opened, mine_field)
+        if first_click:
+            draw_startscreen(height, width)
+        elif not game_over:
+            draw_minesweeper(height, width, opened, mine_field)
+        else:
+            draw_endscreen(height, width)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -32,6 +38,9 @@ def play_minesweeper(height, width, mine_count):
                 if first_click:
                     mine_field = create_minefield.create_minesweeper_matrix(height, width, mine_count, x, y)
                     first_click = False
+                else:
+                    opened[x][y] = 0
+
                 print(x, y)
 
         pygame.display.flip()
@@ -42,32 +51,34 @@ def play_minesweeper(height, width, mine_count):
 
 
 def draw_minesweeper(height, width, opened, mine_field):
-    try:
-        for row in mine_field:
-            print(row)
-        mfexists = True
-    except IndexError or TypeError:
-        mfexists = False
     for x in range(width):
         for y in range(height):
             rect = pygame.Rect(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE)
-            if mfexists:
-                if opened[x][y] == 1:
-                    try:
-                        if mine_field[x][y] == 0 or mine_field[x][y] == 1:
-                            opened[x][y] = 0
-                    except IndexError:
-                        pygame.draw.rect(SCREEN, OPEN_COLOR, rect, 0)
-                elif opened[x][y] == 0:
-                    pygame.draw.rect(SCREEN, OPEN_COLOR, rect, 0)
-                    number_font = pygame.font.SysFont(None, round(BLOCK_SIZE * 1.3))
-                    number = str(mine_field[x][y])
-                    number_image = number_font.render(number, True, BLACK, OPEN_COLOR)
-                    sizes = number_image.get_size()
-                    SCREEN.blit(number_image, (
+            if opened[x][y] == 1:
+                try:
+                    if mine_field[x][y] == 0 or mine_field[x][y] == 1:
+                        opened[x][y] = 0
+                except IndexError:
+                    pygame.draw.rect(SCREEN, OPEN_COLOR, rect, 1)
+            elif opened[x][y] == 0:
+                pygame.draw.rect(SCREEN, OPEN_COLOR, rect, 0)
+                number_font = pygame.font.SysFont(None, round(BLOCK_SIZE * 1.3))
+                number = str(mine_field[x][y])
+                number_image = number_font.render(number, True, BLACK, OPEN_COLOR)
+                sizes = number_image.get_size()
+                SCREEN.blit(number_image, (
                     x * BLOCK_SIZE + (BLOCK_SIZE - sizes[0]) / 2, y * BLOCK_SIZE + (BLOCK_SIZE - sizes[1]) / 2))
-            else:
-                pygame.draw.rect(SCREEN, CELL_COLOR, rect, 0)
+
+
+def draw_startscreen(height, width):
+    for x in range(width):
+        for y in range(height):
+            rect = pygame.Rect(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE)
+            pygame.draw.rect(SCREEN, OPEN_COLOR, rect, 1)
+
+
+def draw_endscreen(height, width):
+    pass
 
 
 def create_opened(height, width):
@@ -80,4 +91,4 @@ def create_opened(height, width):
 
 
 if __name__ == "__main__":
-    play_minesweeper(20, 20, 20)
+    play_minesweeper(20, 20, 80)
